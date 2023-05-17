@@ -7,7 +7,8 @@ import com.akkodis.testjava.content.infrastructure.controller.dto.ProductFilters
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Comparator;
+
 
 @Service
 @AllArgsConstructor
@@ -16,11 +17,15 @@ public class GetProductsUseCaseImpl implements GetProductsUseCase {
     private final GetProductRepository repo;
 
 
-    public List<Product> getProducts(ProductFilters filters){
+    public Product getProductApplicationPrice(ProductFilters filters){
 
-        return repo.getProducts(filters);
+        return repo.getProducts(filters).stream().max(Comparator.comparingInt(Product::getPriority))
+                .orElse(null);
 
     }
+
+
+
 }
 
 

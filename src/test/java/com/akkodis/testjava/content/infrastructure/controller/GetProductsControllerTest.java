@@ -24,8 +24,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -60,14 +59,10 @@ class GetProductsControllerTest {
         // Given
         ProductFilters filters = new ProductFilters();
 
-        List<Product> expectedProductList = new ArrayList<>();
-        expectedProductList.add(DataTest.getProduct1());
-        expectedProductList.add(DataTest.getProduct2());
-        expectedProductList.add(DataTest.getProduct3());
-        expectedProductList.add(DataTest.getProduct4());
+        Product expectedProduct = DataTest.getProduct1();
 
         // When
-        when(useCase.getProducts(filters)).thenReturn(expectedProductList);
+        when(useCase.getProductApplicationPrice(filters)).thenReturn(expectedProduct);
 
         // Act and Assert
         String responseJson = mockMvc.perform(get("/api/v1/products")
@@ -76,18 +71,15 @@ class GetProductsControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse().getContentAsString();
 
-        List<ProductOutputDto> output = objectMapper.readValue(responseJson, new TypeReference<>() {});
+        ProductOutputDto output = objectMapper.readValue(responseJson, new TypeReference<>() {});
 
-        //Test size
-        assertEquals(output.size(), expectedProductList.size());
-
-        //Test first product conversion
-        assertEquals(expectedProductList.get(0).getBrandId(), output.get(0).getBrandId());
-        assertEquals(expectedProductList.get(0).getStartDate(), output.get(0).getStartDate());
-        assertEquals(expectedProductList.get(0).getEndDate(), output.get(0).getEndDate());
-        assertEquals(expectedProductList.get(0).getPriceList(), output.get(0).getPriceList());
-        assertEquals(expectedProductList.get(0).getProductId(), output.get(0).getProductId());
-        assertEquals(expectedProductList.get(0).getPrice(), output.get(0).getPrice());
+        //Test product conversion
+        assertEquals(expectedProduct.getBrandId(), output.getBrandId());
+        assertEquals(expectedProduct.getStartDate(), output.getStartDate());
+        assertEquals(expectedProduct.getEndDate(), output.getEndDate());
+        assertEquals(expectedProduct.getPriceList(), output.getPriceList());
+        assertEquals(expectedProduct.getProductId(), output.getProductId());
+        assertEquals(expectedProduct.getPrice(), output.getPrice());
     }
 
 
@@ -96,11 +88,10 @@ class GetProductsControllerTest {
         // Given
         ProductFilters filters = new ProductFilters(1, 35444, "2020-06-14 10:00:00");
 
-        List<Product> expectedProductList = new ArrayList<>();
-        expectedProductList.add(DataTest.getProduct1());
+        Product expectedProduct = DataTest.getProduct1();
 
         // When
-        when(useCase.getProducts(filters)).thenReturn(expectedProductList);
+        when(useCase.getProductApplicationPrice(filters)).thenReturn(expectedProduct);
 
         // Act and Assert
         String responseJson = mockMvc.perform(get("/api/v1/products")
@@ -112,18 +103,15 @@ class GetProductsControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn().getResponse().getContentAsString();
 
-        List<ProductOutputDto> output = objectMapper.readValue(responseJson, new TypeReference<>() {});
+        ProductOutputDto output = objectMapper.readValue(responseJson, new TypeReference<>() {});
 
-        //Test size
-        assertEquals(expectedProductList.size(), output.size());
-
-        //Test first product conversion
-        assertEquals(expectedProductList.get(0).getBrandId(), output.get(0).getBrandId());
-        assertEquals(expectedProductList.get(0).getStartDate(), output.get(0).getStartDate());
-        assertEquals(expectedProductList.get(0).getEndDate(), output.get(0).getEndDate());
-        assertEquals(expectedProductList.get(0).getPriceList(), output.get(0).getPriceList());
-        assertEquals(expectedProductList.get(0).getProductId(), output.get(0).getProductId());
-        assertEquals(expectedProductList.get(0).getPrice(), output.get(0).getPrice());
+        //Test product conversion
+        assertEquals(expectedProduct.getBrandId(), output.getBrandId());
+        assertEquals(expectedProduct.getStartDate(), output.getStartDate());
+        assertEquals(expectedProduct.getEndDate(), output.getEndDate());
+        assertEquals(expectedProduct.getPriceList(), output.getPriceList());
+        assertEquals(expectedProduct.getProductId(), output.getProductId());
+        assertEquals(expectedProduct.getPrice(), output.getPrice());
     }
 
 
@@ -134,7 +122,7 @@ class GetProductsControllerTest {
         // Given testCases params
 
         // When
-        when(useCase.getProducts(any())).thenReturn(new ArrayList<>());
+        when(useCase.getProductApplicationPrice(any())).thenReturn(new Product());
 
         // Act and Assert
         mockMvc.perform(get("/api/v1/products")

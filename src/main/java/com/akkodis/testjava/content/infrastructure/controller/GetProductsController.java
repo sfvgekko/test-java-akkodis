@@ -17,9 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 @RestController
 @AllArgsConstructor
 @RequestMapping("/api/v1/products")
@@ -32,8 +29,9 @@ public class GetProductsController {
 
 
     @GetMapping
-    @Operation(summary = "Get Products",
-               description = "Return the products according the filters with the price list, currency and price",
+    @Operation(summary = "Get Product Application Price",
+               description = "Return the product price application according the filters with the price list, currency," +
+                       "and price, and applying, if applicable, the priority.",
                responses = {
                     @ApiResponse(responseCode = "200", description = "OK", content = {
                          @Content(mediaType = "application/json",
@@ -49,7 +47,7 @@ public class GetProductsController {
                     )
                }
     )
-    public List<ProductOutputDto> getProducts(
+    public ProductOutputDto getProductApplicationPrice(
             @Parameter(name = "brandId", description = "Group brand identifier", example = "1")
             @RequestParam(required = false) Integer brandId,
             @Parameter(name = "productId", description = "Product identifier", example = "35455")
@@ -60,9 +58,7 @@ public class GetProductsController {
 
         ProductFilters filters = new ProductFilters(brandId, productId, applicationDate);
 
-        return useCase.getProducts(filters).stream()
-                .map(mapper::domainToOutputDto)
-                .collect(Collectors.toList());
+        return mapper.domainToOutputDto(useCase.getProductApplicationPrice(filters));
 
     }
 }

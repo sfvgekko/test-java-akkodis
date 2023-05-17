@@ -30,17 +30,17 @@ class GetProductsUseCaseImplTest {
     void getProducts() {
         // Given
         List<Product> expectedProductList = new ArrayList<>();
-        expectedProductList.add(DataTest.getProduct1());
-        expectedProductList.add(DataTest.getProduct2());
+        expectedProductList.add(DataTest.getProduct1()); //priority = 0
+        expectedProductList.add(DataTest.getProduct2()); //priority = 1
 
         // When
         when(repo.getProducts(any())).thenReturn(expectedProductList);
 
         // Act
-        List<Product> productList = useCase.getProducts(new ProductFilters());
+        Product product = useCase.getProductApplicationPrice(new ProductFilters());
 
         // Then
-        Assertions.assertEquals(expectedProductList.size(), productList.size());
+        Assertions.assertEquals(1, product.getPriority());
 
     }
 
